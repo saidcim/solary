@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orrery Terminal</title>
+<meta name="description" content="A new tab page shaped like a terminal. Eight planets drawn live as rotating, lit ASCII — type a name to travel.">
+<meta name="theme-color" content="#05070C">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Orrery Terminal">
+<meta property="og:description" content="A new tab page shaped like a terminal. Eight planets drawn live as rotating, lit ASCII.">
+<meta property="og:image" content="preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="grid">
+  <section class="console" id="console" aria-label="Terminal">
+    <div class="log" id="log" role="log" aria-live="polite"></div>
+    <form class="prompt" id="form" autocomplete="off">
+      <label class="ps1" for="input">visitor@sol<span class="pt">:</span>~<span class="caret">$</span></label>
+      <input id="input" name="input" type="text" spellcheck="false" autocapitalize="off" aria-label="Command">
+    </form>
+  </section>
+  <section class="stage" id="stage" aria-label="Body render">
+    <div class="clock"><span id="clock">--:--:--</span> <span id="date">---</span></div>
+    <pre class="raster" id="raster" aria-hidden="true"></pre>
+    <h1 class="name" id="name"></h1>
+  </section>
+</main>
+<div class="sky" id="sky" aria-hidden="true"></div>
+<script src="app.js"></script>
+</body>
+</html>
