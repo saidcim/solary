@@ -412,4 +412,72 @@
     print("  A new tab page built as a terminal. Every body is drawn live", "muted");
     print("  from a lit sphere sampled into characters, not stored art.", "muted");
     print("  The interface takes its colour from whatever you are orbiting.", "muted");
-  });})();
+  });
+
+  function bar(value, max, width) {
+    const n = Math.max(1, Math.round((value / max) * width));
+    return "█".repeat(n) + "·".repeat(Math.max(0, width - n));
+  }
+
+  define("info", "[body]", "full telemetry for one body", 20, (arg) => {
+    const b = arg ? byId[arg] : state.body;
+    if (!b) return print("info: no body named '" + arg + "'. Try ls.", "warn");
+    print(b.label.toUpperCase() + " · " + b.ordinal + " from the sun", "head");
+    for (const [k, v] of b.rows) print("  " + k.padEnd(12) + v, "muted");
+    print("  " + b.tag, "key");
+  });
+
+  define("size", "", "compare diameters", 30, () => {
+    print("DIAMETER, RELATIVE", "head");
+    for (const b of BODIES) print("  " + b.label.toLowerCase().padEnd(9) + bar(b.diameter, 142984, 24) + " " + b.diameter.toLocaleString("en-US").padStart(8) + " km", b.id === state.body.id ? "key" : "muted");
+  });
+
+  const skyEl = document.getElementById("sky");
+
+  const STAR_TIERS = [
+    { w: 0.62, ch: ".", size: 10, color: "#2E394F", base: 0.55 },
+    { w: 0.26, ch: "·", size: 13, color: "#3E4C66", base: 0.7 },
+    { w: 0.09, ch: "+", size: 16, color: "#55688A", base: 0.8 },
+    { w: 0.03, ch: "*", size: 18, color: "#66799B", base: 0.85 }
+  ];
+
+  const stars = [];
+
+  function pickTier() {
+    let r = Math.random();
+    for (const t of STAR_TIERS) {
+      if (r < t.w) return t;
+      r -= t.w;
+    }
+    return STAR_TIERS[0];
+  }
+
+  function seedSky() {
+    skyEl.textContent = "";
+    stars.length = 0;
+    const n = Math.round((window.innerWidth * window.innerHeight) / 15000);
+    for (let i = 0; i < n; i++) {
+      const t = pickTier();
+      const node = document.createElement("span");
+      node.className = "star";
+      node.textContent = t.ch;
+      node.style.left = (Math.random() * 100).toFixed(3) + "%";
+      node.style.top = (Math.random() * 100).toFixed(3) + "%";
+      node.style.fontSize = t.size + "px";
+      node.style.color = t.color;
+      node.style.opacity = (t.base * (0.55 + Math.random() * 0.45)).toFixed(2);
+      skyEl.appendChild(node);
+      stars.push({ node: node, rest: node.style.opacity });
+    }
+  }
+
+  function flare() {
+    if (!stars.length) return;
+    const s = stars[Math.floor(Math.random() * stars.length)];
+    s.node.style.opacity = Math.random() > 0.45 ? "1" : "0.06";
+    setTimeout(() => { s.node.style.opacity = s.rest; }, 1500 + Math.random() * 1500);
+  }
+
+  seedSky();
+  window.addEventListener("resize", seedSky);
+  if (!reduced) setInterval(flare, 1400);})();
