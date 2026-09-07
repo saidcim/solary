@@ -270,4 +270,146 @@
   tick();
   setInterval(tick, 1000);
   window.addEventListener("resize", fit);
-  if (!reduced) setInterval(loop, 72);})();
+  if (!reduced) setInterval(loop, 72);
+
+  BODIES.push(
+    {
+      id: "mercury", order: 1, ordinal: "I", label: "Mercury",
+      tag: "Closest to the fire, and still the coldest nights.",
+      accent: "#C7B49B", diameter: 4879, r: 22,
+      ramp: " .·:-=+o0#@",
+      colors: [["#6F6659", "#B4A691"], ["#463F38", "#6B6156"], ["#C3B79E", "#EFE6D2"]],
+      rows: [["DIAMETER", "4,879 km"], ["MASS", "0.055 ⊕"], ["GRAVITY", "3.70 m/s²"], ["DAY", "1,407.6 h"], ["YEAR", "88.0 d"], ["DISTANCE", "0.387 AU"], ["MOONS", "0"], ["MEAN TEMP", "167 °C"]],
+      surf: (lat, lon) => {
+        const c = Math.sin(lon * 7 + lat * 3) * Math.sin(lat * 9 - lon * 2);
+        return [clamp(0.55 + 0.45 * c, 0, 1), c < -0.42 ? 1 : c > 0.62 ? 2 : 0];
+      }
+    },
+    {
+      id: "venus", order: 2, ordinal: "II", label: "Venus",
+      tag: "A furnace sealed under a lid it cannot lift.",
+      accent: "#E8C87A", diameter: 12104, r: 27,
+      ramp: " ..·:░░▒▒▓█",
+      colors: [["#9E7434", "#D8B463"], ["#D2B478", "#F7E7B8"]],
+      rows: [["DIAMETER", "12,104 km"], ["MASS", "0.815 ⊕"], ["GRAVITY", "8.87 m/s²"], ["DAY", "5,832.5 h"], ["YEAR", "224.7 d"], ["DISTANCE", "0.723 AU"], ["MOONS", "0"], ["MEAN TEMP", "464 °C"]],
+      surf: (lat, lon) => {
+        const s = 0.5 + 0.5 * Math.sin(lon * 2 + Math.sin(lat * 5) * 2.2);
+        const v = clamp(0.4 + 0.35 * s + 0.25 * bands(lat, 6, lon * 0.6), 0, 1);
+        return [v, v > 0.68 ? 1 : 0];
+      }
+    },
+    {
+      id: "mars", order: 4, ordinal: "IV", label: "Mars",
+      tag: "Iron, dust, and two captured stones for moons.",
+      accent: "#E2653B", diameter: 6792, r: 24,
+      ramp: " .:;-=x*%#@",
+      colors: [["#A6512F", "#E2814F"], ["#6E2C1A", "#A9482A"], ["#C4C0B7", "#F1EDE4"]],
+      rows: [["DIAMETER", "6,792 km"], ["MASS", "0.107 ⊕"], ["GRAVITY", "3.71 m/s²"], ["DAY", "24.7 h"], ["YEAR", "687.0 d"], ["DISTANCE", "1.524 AU"], ["MOONS", "2"], ["MEAN TEMP", "−65 °C"]],
+      surf: (lat, lon) => {
+        if (Math.abs(lat) > 1.22) return [1, 2];
+        const d = Math.sin(lon * 4 + lat * 2) * Math.sin(lat * 6);
+        return [clamp(0.35 + 0.5 * (0.5 + 0.5 * d), 0, 1), d < -0.3 ? 1 : 0];
+      }
+    },
+    {
+      id: "jupiter", order: 5, ordinal: "V", label: "Jupiter",
+      tag: "A storm wider than Earth, older than the telescope.",
+      accent: "#D9A066", diameter: 142984, r: 38,
+      ramp: " .-~=≡+*#%@",
+      colors: [["#7A4F2C", "#B4763F"], ["#CBA678", "#F3DDB4"], ["#9B3722", "#DC6A45"]],
+      rows: [["DIAMETER", "142,984 km"], ["MASS", "317.8 ⊕"], ["GRAVITY", "24.79 m/s²"], ["DAY", "9.9 h"], ["YEAR", "4,331 d"], ["DISTANCE", "5.203 AU"], ["MOONS", "95"], ["MEAN TEMP", "−110 °C"]],
+      surf: (lat, lon) => {
+        const b = bands(lat, 13, Math.sin(lon * 2) * 0.5);
+        const spot = Math.exp(-(Math.pow(wrap(lon + 1.2) - Math.PI, 2) * 3 + Math.pow(lat + 0.32, 2) * 26));
+        if (spot > 0.35) return [clamp(0.55 + spot * 0.4, 0, 1), 2];
+        return [clamp(0.25 + 0.65 * b, 0, 1), b > 0.55 ? 1 : 0];
+      }
+    },
+    {
+      id: "saturn", order: 6, ordinal: "VI", label: "Saturn",
+      tag: "Held together by the ice it never took in.",
+      accent: "#E3CE9B", diameter: 120536, r: 20, ring: true,
+      ramp: " .-~=+*#%@",
+      colors: [["#9C8451", "#D2B77E"], ["#D9C89A", "#F6ECCB"], ["#7C7053", "#C0B189"]],
+      rows: [["DIAMETER", "120,536 km"], ["MASS", "95.2 ⊕"], ["GRAVITY", "10.44 m/s²"], ["DAY", "10.7 h"], ["YEAR", "10,747 d"], ["DISTANCE", "9.537 AU"], ["MOONS", "274"], ["MEAN TEMP", "−140 °C"]],
+      surf: (lat, lon) => {
+        const b = bands(lat, 9, Math.sin(lon) * 0.3);
+        return [clamp(0.3 + 0.6 * b, 0, 1), b > 0.58 ? 1 : 0];
+      }
+    },
+    {
+      id: "uranus", order: 7, ordinal: "VII", label: "Uranus",
+      tag: "Knocked over once, and orbiting on its side ever since.",
+      accent: "#7FE3D4", diameter: 51118, r: 32,
+      ramp: " ..::--==+*",
+      colors: [["#3E8C84", "#6FCFC1"], ["#8CE8DC", "#CBF6F0"]],
+      rows: [["DIAMETER", "51,118 km"], ["MASS", "14.5 ⊕"], ["GRAVITY", "8.87 m/s²"], ["DAY", "17.2 h"], ["YEAR", "30,589 d"], ["DISTANCE", "19.19 AU"], ["MOONS", "28"], ["MEAN TEMP", "−195 °C"]],
+      surf: (lat, lon) => {
+        const b = bands(lat, 4, lon * 0.2);
+        return [clamp(0.55 + 0.3 * b, 0, 1), b > 0.62 ? 1 : 0];
+      }
+    },
+    {
+      id: "neptune", order: 8, ordinal: "VIII", label: "Neptune",
+      tag: "Last one out, and the windiest by a wide margin.",
+      accent: "#5C7CF0", diameter: 49528, r: 32,
+      ramp: " .:-=+*o#%@",
+      colors: [["#26418C", "#4C7CF0"], ["#7FA0F5", "#B8CCFF"], ["#141F52", "#2A3F8F"]],
+      rows: [["DIAMETER", "49,528 km"], ["MASS", "17.1 ⊕"], ["GRAVITY", "11.15 m/s²"], ["DAY", "16.1 h"], ["YEAR", "59,800 d"], ["DISTANCE", "30.07 AU"], ["MOONS", "16"], ["MEAN TEMP", "−200 °C"]],
+      surf: (lat, lon) => {
+        const b = bands(lat, 6, Math.sin(lon * 1.5) * 0.8);
+        const spot = Math.exp(-(Math.pow(wrap(lon + 2.4) - Math.PI, 2) * 4 + Math.pow(lat - 0.35, 2) * 30));
+        if (spot > 0.4) return [clamp(0.45 + spot * 0.3, 0, 1), 2];
+        return [clamp(0.35 + 0.5 * b, 0, 1), b > 0.6 ? 1 : 0];
+      }
+    }
+  );
+
+  BODIES.sort((a, b) => a.order - b.order);
+
+  const byId = {};
+  for (const b of BODIES) byId[b.id] = b;
+
+  function travel(body) {
+    show(body);
+    print("Arrived at " + body.label + ". " + body.tag, "key");
+  }
+
+  for (const b of BODIES) define(b.id, "", null, 0, () => travel(b));
+
+  define("<body>", "", "travel to mercury … neptune", 5, null);
+
+  define("ls", "", "list every body with its distance", 10, () => {
+    print("8 BODIES INDEXED", "head");
+    for (const b of BODIES) print("  " + b.ordinal.padEnd(5) + b.label.toLowerCase().padEnd(10) + b.rows[5][1].padStart(10), b.id === state.body.id ? "key" : "muted");
+  });
+
+  define("next", "", null, 0, () => {
+    const n = BODIES.indexOf(state.body) + 1;
+    if (n >= BODIES.length) return print("next: Neptune is the outermost body.", "warn");
+    travel(BODIES[n]);
+  });
+
+  define("prev", "", null, 0, () => {
+    const n = BODIES.indexOf(state.body) - 1;
+    if (n < 0) return print("prev: Mercury is the innermost body.", "warn");
+    travel(BODIES[n]);
+  });
+
+  define("spin", "", null, 0, (arg) => {
+    if (arg === "stop" || arg === "0") {
+      state.spin = 0;
+      return print("Rotation held. Run spin 1 to resume.", "key");
+    }
+    const n = parseFloat(arg);
+    if (!isFinite(n) || n < 0.25 || n > 4) return print("spin: give a number between 0.25 and 4, or stop.", "warn");
+    state.spin = n;
+    print("Rotation set to " + n.toFixed(2) + "×.", "key");
+  });
+
+  define("about", "", null, 0, () => {
+    print("ABOUT", "head");
+    print("  A new tab page built as a terminal. Every body is drawn live", "muted");
+    print("  from a lit sphere sampled into characters, not stored art.", "muted");
+    print("  The interface takes its colour from whatever you are orbiting.", "muted");
+  });})();
