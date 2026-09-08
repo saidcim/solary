@@ -480,4 +480,58 @@
 
   seedSky();
   window.addEventListener("resize", seedSky);
-  if (!reduced) setInterval(flare, 1400);})();
+  if (!reduced) setInterval(flare, 1400);
+
+  const ENGINES = {
+    google: { label: "Google", url: "https://www.google.com/search?q=" },
+    duckduckgo: { label: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
+    yahoo: { label: "Yahoo", url: "https://search.yahoo.com/search?p=" }
+  };
+
+  const SHORTCUTS = {
+    g: { label: "Google", home: "https://www.google.com", url: "https://www.google.com/search?q=" },
+    yt: { label: "YouTube", home: "https://www.youtube.com", url: "https://www.youtube.com/results?search_query=" },
+    gh: { label: "GitHub", home: "https://github.com", url: "https://github.com/search?q=" }
+  };
+
+  function go(url) {
+    try {
+      window.location.assign(url);
+    } catch (e) {
+      window.open(url, "_blank", "noopener");
+    }
+  }
+
+  function search(target, query) {
+    if (!query) return print(target.label + ": give something to search for.", "warn");
+    print("Searching " + target.label + " for " + query, "key");
+    go(target.url + encodeURIComponent(query));
+  }
+
+  define("s", "<query>", "search the web with the current engine", 40, (arg, rest) => search(ENGINES[state.engine], rest));
+
+  define("g", "/ yt / gh", "open Google, YouTube or GitHub", 50, (arg, rest) => openSite("g", rest));
+  define("yt", "", null, 0, (arg, rest) => openSite("yt", rest));
+  define("gh", "", null, 0, (arg, rest) => openSite("gh", rest));
+
+  function openSite(key, rest) {
+    const site = SHORTCUTS[key];
+    if (rest) return search(site, rest);
+    print("Opening " + site.label, "key");
+    go(site.home);
+  }
+
+  define("engine", "<name>", "google, duckduckgo or yahoo", 60, (arg) => {
+    if (!arg) return print("Searching with " + ENGINES[state.engine].label + ". Options: google, duckduckgo, yahoo.", "key");
+    if (!ENGINES[arg]) return print("engine: pick google, duckduckgo or yahoo.", "warn");
+    state.engine = arg;
+    store.set("orrery.engine", arg);
+    print("Search engine set to " + ENGINES[arg].label + ".", "key");
+  });
+
+  const savedEngine = store.get("orrery.engine");
+  if (savedEngine && ENGINES[savedEngine]) state.engine = savedEngine;
+
+  const savedBody = store.get("orrery.body");
+  if (savedBody && byId[savedBody]) show(byId[savedBody]);
+})();
