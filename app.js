@@ -231,7 +231,7 @@
     nameEl.textContent = body.label;
     fit();
     rasterEl.innerHTML = frame(body, state.grid, state.phase);
-    store.set("orrery.body", body.id);
+    store.set("solary.body", body.id);
     if (!reduced) rasterEl.animate([{ opacity: 0.15 }, { opacity: 1 }], { duration: 380, easing: "ease-out" });
   }
 
