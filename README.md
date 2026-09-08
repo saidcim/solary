@@ -2,7 +2,7 @@
 
 It features a standard terminal interface on the left, while the right side displays
 ASCII art and an animated rotating planet. There are eight distinct themes—one for
-each of the eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.
+each of the eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Here is the [page](https://saidcim.github.io/solary/).
 <img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/be23fcfe-a022-4896-b599-e8577b1e3608" />
 
 ## Commands
